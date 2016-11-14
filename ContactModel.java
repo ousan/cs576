@@ -7,7 +7,8 @@ public class ContactModel {
 
 	private String searchData;
 	private String searchType;
-	
+	private ResultSet rs;
+	private String result = "";
 	public void openAndSearchDatabase() throws SQLException{
 	    Connection conn=DriverManager.getConnection("jdbc:ucanaccess://rehber.MDB");
 		Statement s = conn.createStatement();
@@ -24,8 +25,8 @@ public class ContactModel {
 			query ="select * from fihrist where field2 like \"*"+ searchData +"*\"";
 		    System.out.println(query);
 		}
-		
-		ResultSet rs = s.executeQuery(query);
+
+		rs = s.executeQuery(query);
 		while (rs.next()) {
 			/*
 		    System.out.print(rs.getString(1) + "| |");
@@ -44,5 +45,9 @@ public class ContactModel {
 	
 	public void setSearchType(String search_type){
 		this.searchType = search_type;
+	}
+	
+	public String getResult(){
+		return this.result;
 	}
 }

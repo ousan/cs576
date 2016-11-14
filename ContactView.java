@@ -10,9 +10,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.RoundRectangle2D;
+import java.io.Console;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -33,9 +37,9 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 
-public class ContactView {
+public class ContactView implements  KeyListener{
 
-	private ContactController controller;
+	private ContactController m_controller;
     private JFrame mainFrame;
     private JLabel headerLabel;
     private JPanel selectionPanel;
@@ -46,30 +50,24 @@ public class ContactView {
     final JRadioButton numberRadBut;
     final JButton startButton;
     private String searchType = "name";
-    private static String searchData;
+    private static String searchData = "";
+    
     public ContactView(){
     	
     	mainFrame = new JFrame("Fihrist");
         mainFrame.setSize(500, 200);
         mainFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-        mainFrame.setLayout(new GridLayout(3,1));
+        mainFrame.setLayout(new GridLayout(2,1));
         mainFrame.setLocationRelativeTo(null);
         mainFrame.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent windowEvent){
+            public void windowClosing(WindowEvent windowEvent) {
                System.exit(0);
             }        
          });   
         
         headerLabel = new JLabel("Search:");
         searchDataTextField = new JTextField(30);
-    	
-    	nameRadBut = new JRadioButton("Search by name",true);
-    	numberRadBut = new JRadioButton("Search by number");
-    	nameRadBut.setMnemonic(KeyEvent.VK_N);
-        numberRadBut.setMnemonic(KeyEvent.VK_M);
-        ButtonGroup buttongroup = new ButtonGroup();
-        buttongroup.add(nameRadBut);
-        buttongroup.add(numberRadBut);
+        searchDataTextField.addKeyListener(this);
         
         textPanel = new JPanel();
         textPanel.setLayout(new FlowLayout());
@@ -111,14 +109,24 @@ public class ContactView {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				searchData = searchDataTextField.getText();
-				controller.searchStarted();
+				checkTextAndStartSearch(searchData);		
 			}
 		});	
           
         }
 
-    public void assignController(ContactController controller) {
-    	this.controller = controller;
+    public void checkTextAndStartSearch(String searchData){
+    	if(isAlpha(searchData)){
+    		searchType="name";
+    	}
+    	else{
+    		searchType="number";
+    	}
+		m_controller.searchStarted();
+    }
+    
+    public void assignController(ContactController controller){
+    	this.m_controller = controller;
     }
     
     public String getSearchType(){
@@ -127,6 +135,57 @@ public class ContactView {
     
     public String getSearchData(){
         return searchData;
+    }
+    
+    public boolean isAlpha(String searchData){
+		return searchData.matches("[a-zA-Z]+");
+    }
+
+	@Override
+	public void keyPressed(KeyEvent arg0) {
+		int keyCode = arg0.getKeyCode();
+		char c = (char)keyCode;
+		
+		if(arg0.getKeyCode() == KeyEvent.VK_BACK_SPACE){
+			System.out.println("backspace");
+			if(searchData.length() > 0){
+				searchData = removeCharAt(searchData, searchData.length()-1);
+			}
+			else{
+				searchData = "";
+				return;
+			}
+		}
+		else if(arg0.getKeyCode() == KeyEvent.VK_ESCAPE){
+			System.exit(0);
+		}
+		else{
+		    searchData += c;			
+		}
+		System.out.println(searchData);
+		checkTextAndStartSearch(searchData);
+	}
+
+	@Override
+	public void keyReleased(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+    private static String removeCharAt(String s, int i) 
+    {
+        StringBuffer buf = new StringBuffer(s.length() -1);
+        buf.append(s.substring(0, i)).append(s.substring(i+1));
+        return buf.toString();
+    }
+    
+    public void updateView(String results){
     }
 }
 

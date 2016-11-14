@@ -7,6 +7,7 @@ public class ContactController {
 	private ContactView view;
 	private String searchData;
 	private String searchType;
+	
 	public ContactController(ContactModel model,
 			                 ContactView view) {
 		this.model = model;
@@ -22,6 +23,11 @@ public class ContactController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+        updateView();
+	}
+	
+	public void updateView() {
+		view.updateView(model.getResult());
 	}
 	
 	public void getFromView(){
