@@ -34,6 +34,7 @@ public class ContactModel {
 		    System.out.println(rs.getString(3)+ "|");
 		    */
 			System.out.println(String.format("%s %s %s",rs.getString(1),rs.getString(2),rs.getString(3)));
+			result = String.format("%s %s %s",rs.getString(1),rs.getString(2),rs.getString(3));
 		}
 		System.out.println("query finished");
 		rs.close();
