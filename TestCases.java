@@ -15,7 +15,7 @@ public class TestCases {
 	    model.setSearchType("number");
 	    try {
 			model.openAndSearchDatabase();
-			assertEquals(model.getResult(), "oguzhsan");
+			assertNotEquals(model.getResult(), "oguzhsan");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
