@@ -2,13 +2,17 @@ package cs576;
 
 import static org.junit.Assert.*;
 
+import java.awt.Button;
+import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 
 import org.junit.Test;
 
 public class TestCases {
 	ContactModel model = new ContactModel();
-
+	ContactView view = new ContactView();
+	ContactController controller = new ContactController(model, view);
+	
 	@Test
 	public void testNumber() {
 	    model.setSearchData("2759");
@@ -21,6 +25,7 @@ public class TestCases {
 			e.printStackTrace();
 		}
 	}
+
 	@Test
 	public void testName() {
 	    model.setSearchData("koray");
@@ -30,9 +35,38 @@ public class TestCases {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			//System.out.println("test");
 		}
 	}
-  //to be continued
+	
+	@Test
+	public void testCheckTextAndStartSearchNumber() {
+		view.assignController(controller);
+        view.checkTextAndStartSearch("123");
+	}
+	
+	@Test
+	public void testCheckTextAndStartSearchName() {
+		view.assignController(controller);
+        view.checkTextAndStartSearch("koray");
+	}
+	
+	@Test
+	public void testBSpaceKeyPressed(){ 
+		view.assignController(controller);
+		Button a = new Button("click");
+		KeyEvent keyevent = new KeyEvent(a, 1, 20, 4, 8, 'a');
+		view.keyPressed(keyevent);
+	}
+
+	@Test
+	public void testESCKeyPressed(){ 
+		view.assignController(controller);
+		Button a = new Button("click");
+		KeyEvent keyevent = new KeyEvent(a, 1, 20, 4, 27, 'a');
+		view.setSearchData("test");
+		view.keyPressed(keyevent);
+	}
 }
   
 
