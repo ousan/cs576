@@ -1,37 +1,18 @@
 package cs576;
 
-import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.ScrollPane;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.geom.RoundRectangle2D;
-import java.io.Console;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-
-import javax.imageio.ImageIO;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.WindowConstants;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -42,15 +23,16 @@ public class ContactView implements  KeyListener{
 	private ContactController m_controller;
     private JFrame mainFrame;
     private JLabel headerLabel;
-    private JPanel selectionPanel;
     private JPanel textPanel;
-    private JPanel buttonPanel;
     final JTextField searchDataTextField;
-    final JRadioButton nameRadBut;
-    final JRadioButton numberRadBut;
-    final JButton startButton;
     private String searchType = "name";
     private static String searchData = "";
+    
+    private JScrollPane TextAreaScroll;
+    private Style style;
+    private DefaultStyledDocument doc;
+    private JTextPane textArea ;
+    private StyleContext sc;
     
     public ContactView(){
     	
@@ -65,6 +47,18 @@ public class ContactView implements  KeyListener{
             }        
          });   
         
+        sc = new StyleContext();
+        doc = new DefaultStyledDocument(sc);
+        textArea = new JTextPane(doc);
+        style = sc.getStyle(StyleContext.DEFAULT_STYLE);
+        TextAreaScroll = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
+        		                         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        		
+        StyleConstants.setAlignment(style, StyleConstants.ALIGN_LEFT);
+        StyleConstants.setFontSize(style, 12);
+        StyleConstants.setSpaceAbove(style, 1);
+        StyleConstants.setSpaceBelow(style, 1);
+        
         headerLabel = new JLabel("Search:");
         searchDataTextField = new JTextField(30);
         searchDataTextField.addKeyListener(this);
@@ -74,44 +68,10 @@ public class ContactView implements  KeyListener{
         textPanel.add(headerLabel);
         textPanel.add(searchDataTextField);
         
-        selectionPanel = new JPanel();
-        selectionPanel.setLayout(new FlowLayout());
-        selectionPanel.add(nameRadBut);
-        selectionPanel.add(numberRadBut);
-        
-        buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout());
-    	startButton = new JButton("Search");
-        buttonPanel.add(startButton);
-        
+
         mainFrame.add(textPanel);
-        mainFrame.add(selectionPanel);
-        mainFrame.add(buttonPanel);
+        mainFrame.add(TextAreaScroll);
         mainFrame.setVisible(true);  
-        
-        nameRadBut.addItemListener(new ItemListener() {
-			
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-                if(e.getStateChange() == 1) searchType="name";
-			}
-		});
-
-        numberRadBut.addItemListener(new ItemListener() {
-			
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				if(e.getStateChange() == 1) searchType="number";
-			}
-		});        
-
-        startButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				searchData = searchDataTextField.getText();
-				checkTextAndStartSearch(searchData);		
-			}
-		});	
           
         }
 
@@ -188,4 +148,3 @@ public class ContactView implements  KeyListener{
     public void updateView(String results){
     }
 }
-
