@@ -67,6 +67,13 @@ public class TestCases {
 		view.setSearchData("test");
 		view.keyPressed(keyevent);
 	}
+	
+	@Test
+	public void testKeyPressed(){ 
+		view.assignController(controller);
+		Button a = new Button("click");
+		KeyEvent keyevent = new KeyEvent(a, 1, 20, 4, 1, 'a');
+		view.keyPressed(keyevent);
+	}
+	
 }
-  
-
