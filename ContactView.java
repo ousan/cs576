@@ -6,6 +6,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -13,6 +16,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.WindowConstants;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -101,9 +105,31 @@ public class ContactView implements  KeyListener{
 		return searchData.matches("[a-zA-Z]+");
     }
 
+    private static String removeCharAt(String s, int i) 
+    {
+        StringBuffer buf = new StringBuffer(s.length() -1);
+        buf.append(s.substring(0, i)).append(s.substring(i+1));
+        return buf.toString();
+    }
+    
+    public void updateView(String result){
+        try 
+        {
+           textArea.setText("");
+		   byte [] b = result.getBytes(StandardCharsets.ISO_8859_1);
+		   result = new String(b,StandardCharsets.UTF_8);
+		   doc.insertString(0,result , null);
+		}
+		catch (BadLocationException e){
+			e.printStackTrace();
+		}
+        textArea.setCaretPosition(0);
+    }
+    
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		int keyCode = arg0.getKeyCode();
+		System.out.println(keyCode);
 		char c = (char)keyCode;
 		
 		if(arg0.getKeyCode() == KeyEvent.VK_BACK_SPACE){
@@ -122,6 +148,8 @@ public class ContactView implements  KeyListener{
 		else{
 		    searchData += c;			
 		}
+		byte [] b = searchData.getBytes(StandardCharsets.ISO_8859_1);
+		searchData = new String(b,StandardCharsets.UTF_8);
 		System.out.println(searchData);
 		checkTextAndStartSearch(searchData);
 	}
@@ -137,14 +165,9 @@ public class ContactView implements  KeyListener{
 		// TODO Auto-generated method stub
 		
 	}
-	
-    private static String removeCharAt(String s, int i) 
-    {
-        StringBuffer buf = new StringBuffer(s.length() -1);
-        buf.append(s.substring(0, i)).append(s.substring(i+1));
-        return buf.toString();
-    }
-    
-    public void updateView(String results){
-    }
+
+	public void setSearchData(String searchdata){
+		this.searchData = searchdata;
+	}
 }
+
