@@ -56,15 +56,15 @@ public class TestCases {
 		view.assignController(controller);
 		Button a = new Button("click");
 		KeyEvent keyevent = new KeyEvent(a, 1, 20, 4, 8, 'a');
+		view.setSearchData("test");
 		view.keyPressed(keyevent);
 	}
 
 	@Test
 	public void testESCKeyPressed(){ 
-		view.assignController(controller);
+		view.assignController(controller); 
 		Button a = new Button("click");
 		KeyEvent keyevent = new KeyEvent(a, 1, 20, 4, 27, 'a');
-		view.setSearchData("test");
 		view.keyPressed(keyevent);
 	}
 	

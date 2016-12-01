@@ -14,6 +14,30 @@ public class ContactController {
 		this.view = view;
 	}
 
+	public void initialise(){
+		boolean is_database_ready = model.initialiseDatabase();
+		if(is_database_ready)
+		{
+			System.out.println("Db is READY");
+            initialiseUI();
+	        updateView();
+		}
+		else
+		{
+			System.out.println("Db could NOT initialised");
+		}	
+	}
+	
+	public void initialiseUI(){
+		try {
+		    model.setSearchData(" ");
+		    model.setSearchType("name");
+			model.openAndSearchDatabase();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+	}
+	
 	public void searchStarted(){
         getFromView();
         setModelParameters();
@@ -27,7 +51,7 @@ public class ContactController {
 	}
 	
 	public void updateView() {
-		view.updateView(model.getResult());
+		view.updateView(model.getResult()); 
 	}
 	
 	public void getFromView(){
