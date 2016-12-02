@@ -6,7 +6,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 import javax.swing.JFrame;
@@ -41,7 +40,7 @@ public class ContactView implements  KeyListener{
     public ContactView(){
     	
     	mainFrame = new JFrame("Fihrist");
-        mainFrame.setSize(500, 200);
+        mainFrame.setSize(500, 400);
         mainFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         mainFrame.setLayout(new GridLayout(2,1));
         mainFrame.setLocationRelativeTo(null);
@@ -77,7 +76,7 @@ public class ContactView implements  KeyListener{
         mainFrame.add(TextAreaScroll);
         mainFrame.setVisible(true);  
           
-        }
+    }
 
     public void checkTextAndStartSearch(String searchData){
     	if(isAlpha(searchData)){
@@ -128,30 +127,9 @@ public class ContactView implements  KeyListener{
     
 	@Override
 	public void keyPressed(KeyEvent arg0) {
-		int keyCode = arg0.getKeyCode();
-		System.out.println(keyCode);
-		char c = (char)keyCode;
-		
-		if(arg0.getKeyCode() == KeyEvent.VK_BACK_SPACE){
-			System.out.println("backspace");
-			if(searchData.length() > 0){
-				searchData = removeCharAt(searchData, searchData.length()-1);
-			}
-			else{
-				searchData = "";
-				return;
-			}
-		}
-		else if(arg0.getKeyCode() == KeyEvent.VK_ESCAPE){
-			System.exit(0);
-		}
-		else{
-		    searchData += c;			
-		}
-		byte [] b = searchData.getBytes(StandardCharsets.ISO_8859_1);
-		searchData = new String(b,StandardCharsets.UTF_8);
-		System.out.println(searchData);
-		checkTextAndStartSearch(searchData);
+ 		if(arg0.getKeyCode() == KeyEvent.VK_ESCAPE){
+ 			System.exit(0);
+ 		}
 	}
 
 	@Override
