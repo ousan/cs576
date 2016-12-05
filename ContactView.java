@@ -83,7 +83,7 @@ public class ContactView implements  KeyListener{
     		searchType="name";
     	}
     	else{
-    		searchType="number";
+    		searchType="number"; 
     	}
 		m_controller.searchStarted();
     }
@@ -103,20 +103,12 @@ public class ContactView implements  KeyListener{
     public boolean isAlpha(String searchData){
 		return searchData.matches("[a-zA-Z]+");
     }
-
-    private static String removeCharAt(String s, int i) 
-    {
-        StringBuffer buf = new StringBuffer(s.length() -1);
-        buf.append(s.substring(0, i)).append(s.substring(i+1));
-        return buf.toString();
-    }
     
     public void updateView(String result){
         try 
         {
            textArea.setText("");
-		   byte [] b = result.getBytes(StandardCharsets.ISO_8859_1);
-		   result = new String(b,StandardCharsets.UTF_8);
+
 		   doc.insertString(0,result , null);
 		}
 		catch (BadLocationException e){
@@ -135,7 +127,13 @@ public class ContactView implements  KeyListener{
 	@Override
 	public void keyReleased(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-		
+		System.out.println(searchData);
+		searchData = searchDataTextField.getText();
+		//byte [] bytes = searchData.getBytes(StandardCharsets.ISO_8859_1);
+		//for(byte b:bytes)
+        //System.out.println("From view" + b);
+		//searchData = new String(b,StandardCharsets.UTF_8);
+		checkTextAndStartSearch(searchData);
 	}
 
 	@Override
@@ -149,3 +147,4 @@ public class ContactView implements  KeyListener{
 	}
 }
 
+ 
