@@ -1,12 +1,14 @@
 package cs576;
 
+import java.awt.Button;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.nio.charset.StandardCharsets;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -25,24 +27,47 @@ public class ContactView implements  KeyListener{
 
 	private ContactController m_controller;
     private JFrame mainFrame;
+
+    private JPanel updatePanel;
+    private JPanel updatePanelInputRow;
+    private JPanel updatePanelInfoRow;
+    private JLabel infoLabel;
+    private JTextField searchDataTextField;
+    private JTextField usernameTexField;
+    private JTextField passwordTextField;
+    private static String username = "";
+    private static String password = "";
+    
     private JLabel headerLabel;
     private JPanel textPanel;
-    final JTextField searchDataTextField;
+    
+
     private String searchType = "name";
     private static String searchData = "";
-    
+    private Button updateButton;
     private JScrollPane TextAreaScroll;
     private Style style;
     private DefaultStyledDocument doc;
     private JTextPane textArea ;
     private StyleContext sc;
-    
     public ContactView(){
-    	
+    	prepareUI();
+        updateButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				username=usernameTexField.getText();
+				password=passwordTextField.getText();
+				m_controller.updateDB(username, password);
+			}
+		});
+    }
+
+    public void prepareUI(){
     	mainFrame = new JFrame("Fihrist");
         mainFrame.setSize(500, 400);
         mainFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-        mainFrame.setLayout(new GridLayout(2,1));
+        mainFrame.setLayout(new GridLayout(3,1));
         mainFrame.setLocationRelativeTo(null);
         mainFrame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent windowEvent) {
@@ -62,6 +87,27 @@ public class ContactView implements  KeyListener{
         StyleConstants.setSpaceAbove(style, 1);
         StyleConstants.setSpaceBelow(style, 1);
         
+        usernameTexField = new JTextField("username");
+        passwordTextField = new JTextField("password");
+        updateButton = new Button("Update List");
+        
+        updatePanel = new JPanel();
+        updatePanel.setLayout(new GridLayout(3,1));
+        
+        updatePanelInputRow = new JPanel();
+        updatePanelInputRow.setLayout(new FlowLayout());
+        updatePanelInputRow.add(usernameTexField);
+        updatePanelInputRow.add(passwordTextField);
+        updatePanelInputRow.add(updateButton);
+        
+        infoLabel = new JLabel("To update list type and click update button");
+        updatePanelInfoRow = new JPanel();
+        updatePanelInfoRow.setLayout(new FlowLayout());
+        updatePanelInfoRow.add(infoLabel);
+        
+        updatePanel.add(updatePanelInputRow);
+        updatePanel.add(updatePanelInfoRow);
+        
         headerLabel = new JLabel("Search:");
         searchDataTextField = new JTextField(30);
         searchDataTextField.addKeyListener(this);
@@ -71,13 +117,11 @@ public class ContactView implements  KeyListener{
         textPanel.add(headerLabel);
         textPanel.add(searchDataTextField);
         
-
+        mainFrame.add(updatePanel);
         mainFrame.add(textPanel);
         mainFrame.add(TextAreaScroll);
         mainFrame.setVisible(true);  
-          
     }
-
     public void checkTextAndStartSearch(String searchData){
     	if(isAlpha(searchData)){
     		searchType="name";
@@ -87,19 +131,7 @@ public class ContactView implements  KeyListener{
     	}
 		m_controller.searchStarted();
     }
-    
-    public void assignController(ContactController controller){
-    	this.m_controller = controller;
-    }
-    
-    public String getSearchType(){
-		return searchType;
-    }
-    
-    public String getSearchData(){
-        return searchData;
-    }
-    
+
     public boolean isAlpha(String searchData){
 		return searchData.matches("[a-zA-Z]+");
     }
@@ -145,6 +177,25 @@ public class ContactView implements  KeyListener{
 	public void setSearchData(String searchdata){
 		this.searchData = searchdata;
 	}
+	 
+    public void assignController(ContactController controller){
+    	this.m_controller = controller;
+    }
+    
+    public String getSearchType(){
+		return searchType;
+    }
+    
+    public String getSearchData(){
+        return searchData;
+    }
+    
+    public String getUsername(){
+    	return username;
+    }
+    
+    public String getPasssword(){
+    	return password;
+    }
+    
 }
-
- 
