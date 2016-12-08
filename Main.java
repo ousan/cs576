@@ -8,6 +8,6 @@ public class Main {
 		ContactController controller = new ContactController(model, view);
 		
 		view.assignController(controller);
+		controller.initialise();
 	}
-
 }
