@@ -54,6 +54,11 @@ public class ContactController {
 		view.updateView(model.getResult()); 
 	}
 	
+	public void updateDB(String username, String password){
+		model.setInputsForDBupdate(username, password);
+		model.downloadDatabase();
+	}
+	
 	public void getFromView(){
 		this.searchData = view.getSearchData();
 		this.searchType = view.getSearchType();
@@ -65,4 +70,5 @@ public class ContactController {
 		model.setSearchData(this.searchData);
 		model.setSearchType(this.searchType);
 	}
+	
 }
