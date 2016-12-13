@@ -76,4 +76,35 @@ public class TestCases {
 		view.keyPressed(keyevent);
 	}
 	
+	@Test
+	public void testInitializeUI() {
+		view.assignController(controller);
+        controller.initialiseUI();
+	}
+	
+	@Test
+	public void testSearchStarted() {
+		view.assignController(controller);
+        controller.searchStarted();
+	}
+	
+	@Test
+	public void testUpdateView() {
+		view.assignController(controller);
+        controller.updateView();
+	}
+	
+	@Test
+	public void testGetFromView() {
+		view.assignController(controller);
+        controller.getFromView();
+	}	
+	
+	@Test
+	public void testInitialise() {
+		view.assignController(controller);
+        controller.initialise();
+	}
+	
+	
 }
