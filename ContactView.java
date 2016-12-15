@@ -27,11 +27,9 @@ public class ContactView implements  KeyListener{
 
 	private ContactController m_controller;
     private JFrame mainFrame;
-
+    private JFrame updateFrame;
     private JPanel updatePanel;
     private JPanel updatePanelInputRow;
-    private JPanel updatePanelInfoRow;
-    private JLabel infoLabel;
     private JTextField searchDataTextField;
     private JTextField usernameTexField;
     private JTextField passwordTextField;
@@ -45,6 +43,9 @@ public class ContactView implements  KeyListener{
     private String searchType = "name";
     private static String searchData = "";
     private Button updateButton;
+    private Button goToUpdateButton;
+    private Button userManualButton;
+    private Button aboutButton;
     private JScrollPane TextAreaScroll;
     private Style style;
     private DefaultStyledDocument doc;
@@ -52,6 +53,14 @@ public class ContactView implements  KeyListener{
     private StyleContext sc;
     public ContactView(){
     	prepareUI();
+        goToUpdateButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				updateFrame.setVisible(true);
+			}
+		});
+        
         updateButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -61,13 +70,14 @@ public class ContactView implements  KeyListener{
 				m_controller.updateDB(username, password);
 			}
 		});
+        
     }
 
     public void prepareUI(){
     	mainFrame = new JFrame("Fihrist");
         mainFrame.setSize(500, 400);
         mainFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-        mainFrame.setLayout(new GridLayout(3,1));
+        mainFrame.setLayout(new GridLayout(2,1));
         mainFrame.setLocationRelativeTo(null);
         mainFrame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent windowEvent) {
@@ -89,10 +99,10 @@ public class ContactView implements  KeyListener{
         
         usernameTexField = new JTextField("username");
         passwordTextField = new JTextField("password");
-        updateButton = new Button("Update List");
+        updateButton = new Button("Update");
         
         updatePanel = new JPanel();
-        updatePanel.setLayout(new GridLayout(3,1));
+        updatePanel.setLayout(new GridLayout(1,1));
         
         updatePanelInputRow = new JPanel();
         updatePanelInputRow.setLayout(new FlowLayout());
@@ -100,27 +110,36 @@ public class ContactView implements  KeyListener{
         updatePanelInputRow.add(passwordTextField);
         updatePanelInputRow.add(updateButton);
         
-        infoLabel = new JLabel("To update list type and click update button");
-        updatePanelInfoRow = new JPanel();
-        updatePanelInfoRow.setLayout(new FlowLayout());
-        updatePanelInfoRow.add(infoLabel);
-        
         updatePanel.add(updatePanelInputRow);
-        updatePanel.add(updatePanelInfoRow);
         
         headerLabel = new JLabel("Search:");
-        searchDataTextField = new JTextField(30);
+        searchDataTextField = new JTextField(17);
         searchDataTextField.addKeyListener(this);
+        
+        goToUpdateButton = new Button("Update List");
+        aboutButton = new Button("About");
+        userManualButton = new Button("Manual");
         
         textPanel = new JPanel();
         textPanel.setLayout(new FlowLayout());
         textPanel.add(headerLabel);
         textPanel.add(searchDataTextField);
+        textPanel.add(goToUpdateButton);
+        textPanel.add(userManualButton);
+        textPanel.add(aboutButton);
         
         mainFrame.add(updatePanel);
         mainFrame.add(textPanel);
         mainFrame.add(TextAreaScroll);
-        mainFrame.setVisible(true);  
+        mainFrame.setVisible(true);
+        
+        updateFrame = new JFrame("Update List");
+        updateFrame.setSize(250, 75);
+        updateFrame.setLayout(new GridLayout(1,1));
+        updateFrame.add(updatePanel);
+        updateFrame.setLocationRelativeTo(null);
+
+       
     }
     public void checkTextAndStartSearch(String searchData){
     	if(isAlpha(searchData)){
