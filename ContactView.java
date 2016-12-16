@@ -152,7 +152,7 @@ public class ContactView implements  KeyListener{
     }
 
     public boolean isAlpha(String searchData){
-		return searchData.matches("[a-zA-Z]+");
+		return searchData.matches("[a-zA-Z ]+");
     }
     
     public void updateView(String result){
