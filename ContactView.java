@@ -13,6 +13,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
@@ -32,7 +33,7 @@ public class ContactView implements  KeyListener{
     private JPanel updatePanelInputRow;
     private JTextField searchDataTextField;
     private JTextField usernameTexField;
-    private JTextField passwordTextField;
+    private JPasswordField passwordTextField;
     private static String username = "";
     private static String password = "";
     
@@ -98,7 +99,7 @@ public class ContactView implements  KeyListener{
         StyleConstants.setSpaceBelow(style, 1);
         
         usernameTexField = new JTextField("username");
-        passwordTextField = new JTextField("password");
+        passwordTextField = new JPasswordField("password");
         updateButton = new Button("Update");
         
         updatePanel = new JPanel();
@@ -216,5 +217,4 @@ public class ContactView implements  KeyListener{
     public String getPasssword(){
     	return password;
     }
-    
 }
