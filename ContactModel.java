@@ -20,6 +20,8 @@ public class ContactModel {
 	private String searchType;
 	private ResultSet rs;
 	private String result = "";
+	private String m_username = "";
+	private String m_password ="";
 	
 	public void openAndSearchDatabase() throws SQLException{
 	    Connection conn=DriverManager.getConnection("jdbc:ucanaccess://rehber.MDB");
@@ -54,14 +56,13 @@ public class ContactModel {
 	}
 
 	public boolean downloadDatabase(){
-		String user = "oguzhaner";
-    	String pass = "0usan_35";
-    	String src_file = "smb://manfile1/veistek/fihrist/New folder/rehber.MDB"; 
+    	System.out.println("username: " + m_username + " password: " + m_password);
+		String src_file = "smb://manfile1/veistek/fihrist/New folder/rehber.MDB"; 
     	String dest_file = "/home/oguzhaner/Desktop/rehber.MDB";
     	InputStream in = null;
         OutputStream out = null;
         
-    	NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication("",user, pass);
+    	NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication("",m_username, m_password);
 		try {
 			SmbFile source;
 			source = new SmbFile(src_file, auth);
@@ -77,6 +78,7 @@ public class ContactModel {
             
 		} catch (IOException e ) {
 			e.printStackTrace();
+			System.out.println("could not connected");
 			return false;
 		} finally {
             try {
@@ -94,9 +96,26 @@ public class ContactModel {
 		System.out.println("DB file is copied to local succesfully");
 		return true;
     }
-
+	
 	public boolean initialiseDatabase(){
-		return (checkDatabaseExist() ? true : downloadDatabase());
+		return (checkDatabaseExist() ? true : alertDB());
+	}
+	
+	public boolean alertDB(){
+		System.out.println("Db failed");
+		return false;
+	}
+	public void setUsername(String username){
+		this.m_username = username;
+	}
+	
+	public void setPassword(String password){
+		this.m_password = password;
+	}
+	
+	public void setInputsForDBupdate(String username, String password){
+		m_username = username;
+		m_password = password;
 	}
 	
 	public void setSearchData(String search_data){

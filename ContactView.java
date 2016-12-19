@@ -32,7 +32,9 @@ public class ContactView implements  KeyListener{
     private JPanel updatePanel;
     private JPanel updatePanelInputRow;
     private JTextField searchDataTextField;
-    private JTextField usernameTexField;
+    private JLabel usernameLabel;
+    private JLabel passwordLabel;
+    private JTextField usernameTextField;
     private JPasswordField passwordTextField;
     private static String username = "";
     private static String password = "";
@@ -66,7 +68,7 @@ public class ContactView implements  KeyListener{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				username=usernameTexField.getText();
+				username=usernameTextField.getText();
 				password=passwordTextField.getText();
 				m_controller.updateDB(username, password);
 			}
@@ -98,8 +100,10 @@ public class ContactView implements  KeyListener{
         StyleConstants.setSpaceAbove(style, 1);
         StyleConstants.setSpaceBelow(style, 1);
         
-        usernameTexField = new JTextField("username");
-        passwordTextField = new JPasswordField("password");
+        usernameLabel = new JLabel("username:");
+        usernameTextField = new JTextField(10);
+        passwordLabel = new JLabel("password");
+        passwordTextField = new JPasswordField(10);
         updateButton = new Button("Update");
         
         updatePanel = new JPanel();
@@ -107,7 +111,9 @@ public class ContactView implements  KeyListener{
         
         updatePanelInputRow = new JPanel();
         updatePanelInputRow.setLayout(new FlowLayout());
-        updatePanelInputRow.add(usernameTexField);
+        updatePanelInputRow.add(usernameLabel);
+        updatePanelInputRow.add(usernameTextField);
+        updatePanelInputRow.add(passwordLabel);
         updatePanelInputRow.add(passwordTextField);
         updatePanelInputRow.add(updateButton);
         
@@ -135,7 +141,7 @@ public class ContactView implements  KeyListener{
         mainFrame.setVisible(true);
         
         updateFrame = new JFrame("Update List");
-        updateFrame.setSize(250, 75);
+        updateFrame.setSize(450, 85);
         updateFrame.setLayout(new GridLayout(1,1));
         updateFrame.add(updatePanel);
         updateFrame.setLocationRelativeTo(null);
@@ -217,4 +223,5 @@ public class ContactView implements  KeyListener{
     public String getPasssword(){
     	return password;
     }
+    
 }
