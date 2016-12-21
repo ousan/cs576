@@ -56,7 +56,10 @@ public class ContactController {
 	
 	public void updateDB(String username, String password){
 		model.setInputsForDBupdate(username, password);
-		model.downloadDatabase();
+		if(model.downloadDatabase()){
+			initialiseUI();
+			updateView();
+		}
 	}
 	
 	public void getFromView(){

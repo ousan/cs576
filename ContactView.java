@@ -9,6 +9,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,25 +31,10 @@ public class ContactView implements  KeyListener{
 
 	private ContactController m_controller;
     private JFrame mainFrame;
-    private JFrame updateFrame;
-    private JPanel updatePanel;
-    private JPanel updatePanelInputRow;
-    private JTextField searchDataTextField;
-    private JLabel usernameLabel;
-    private JLabel passwordLabel;
-    private JTextField usernameTextField;
-    private JPasswordField passwordTextField;
-    private static String username = "";
-    private static String password = "";
-    
-    private JLabel headerLabel;
     private JPanel textPanel;
-    
-
-    private String searchType = "name";
-    private static String searchData = "";
-    private Button updateButton;
-    private Button goToUpdateButton;
+    private JLabel headerLabel;    
+    private JTextField searchDataTextField;
+    private Button openUpdateFrameButton;
     private Button userManualButton;
     private Button aboutButton;
     private JScrollPane TextAreaScroll;
@@ -54,9 +42,22 @@ public class ContactView implements  KeyListener{
     private DefaultStyledDocument doc;
     private JTextPane textArea ;
     private StyleContext sc;
+    private String searchType = "name";
+    private static String searchData = "";
+    
+    private JFrame updateFrame;
+    private JPanel updatePanel;
+    private JLabel usernameLabel;
+    private JLabel passwordLabel;
+    private JTextField usernameTextField;
+    private JPasswordField passwordTextField;
+    private Button updateButton;
+    private static String username = "";
+    private static String password = "";
+    
     public ContactView(){
     	prepareUI();
-        goToUpdateButton.addActionListener(new ActionListener() {
+        openUpdateFrameButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -66,6 +67,7 @@ public class ContactView implements  KeyListener{
         
         updateButton.addActionListener(new ActionListener() {
 			
+			@SuppressWarnings("deprecation")
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				username=usernameTextField.getText();
@@ -86,7 +88,23 @@ public class ContactView implements  KeyListener{
             public void windowClosing(WindowEvent windowEvent) {
                System.exit(0);
             }        
-         });   
+        });   
+        
+        headerLabel = new JLabel("Search:");
+        searchDataTextField = new JTextField(17);
+        searchDataTextField.addKeyListener(this);
+        
+        openUpdateFrameButton = new Button("Update List");
+        aboutButton = new Button("About");
+        userManualButton = new Button("Manual");
+        
+        textPanel = new JPanel();
+        textPanel.setLayout(new FlowLayout());
+        textPanel.add(headerLabel);
+        textPanel.add(searchDataTextField);
+        textPanel.add(openUpdateFrameButton);
+        textPanel.add(userManualButton);
+        textPanel.add(aboutButton);
         
         sc = new StyleContext();
         doc = new DefaultStyledDocument(sc);
@@ -100,53 +118,30 @@ public class ContactView implements  KeyListener{
         StyleConstants.setSpaceAbove(style, 1);
         StyleConstants.setSpaceBelow(style, 1);
         
+        mainFrame.add(textPanel);
+        mainFrame.add(TextAreaScroll);
+        
         usernameLabel = new JLabel("username:");
         usernameTextField = new JTextField(10);
         passwordLabel = new JLabel("password");
         passwordTextField = new JPasswordField(10);
         updateButton = new Button("Update");
-        
+               
         updatePanel = new JPanel();
-        updatePanel.setLayout(new GridLayout(1,1));
-        
-        updatePanelInputRow = new JPanel();
-        updatePanelInputRow.setLayout(new FlowLayout());
-        updatePanelInputRow.add(usernameLabel);
-        updatePanelInputRow.add(usernameTextField);
-        updatePanelInputRow.add(passwordLabel);
-        updatePanelInputRow.add(passwordTextField);
-        updatePanelInputRow.add(updateButton);
-        
-        updatePanel.add(updatePanelInputRow);
-        
-        headerLabel = new JLabel("Search:");
-        searchDataTextField = new JTextField(17);
-        searchDataTextField.addKeyListener(this);
-        
-        goToUpdateButton = new Button("Update List");
-        aboutButton = new Button("About");
-        userManualButton = new Button("Manual");
-        
-        textPanel = new JPanel();
-        textPanel.setLayout(new FlowLayout());
-        textPanel.add(headerLabel);
-        textPanel.add(searchDataTextField);
-        textPanel.add(goToUpdateButton);
-        textPanel.add(userManualButton);
-        textPanel.add(aboutButton);
-        
-        mainFrame.add(updatePanel);
-        mainFrame.add(textPanel);
-        mainFrame.add(TextAreaScroll);
-        mainFrame.setVisible(true);
+        updatePanel.setLayout(new FlowLayout());
+        updatePanel.add(usernameLabel);
+        updatePanel.add(usernameTextField);
+        updatePanel.add(passwordLabel);
+        updatePanel.add(passwordTextField);
+        updatePanel.add(updateButton);
         
         updateFrame = new JFrame("Update List");
         updateFrame.setSize(450, 85);
         updateFrame.setLayout(new GridLayout(1,1));
-        updateFrame.add(updatePanel);
         updateFrame.setLocationRelativeTo(null);
-
-       
+        updateFrame.add(updatePanel);
+        
+        mainFrame.setVisible(true);
     }
     public void checkTextAndStartSearch(String searchData){
     	if(isAlpha(searchData)){
@@ -155,12 +150,37 @@ public class ContactView implements  KeyListener{
     	else{
     		searchType="number"; 
     	}
-		m_controller.searchStarted();
+    	if(checkContainTRCharacters(searchData)){
+    		searchData = convertTRCharacters(searchData);
+    		System.out.println("found");
+    	}
+    	m_controller.searchStarted();
     }
 
+    public boolean checkContainTRCharacters(String toExamine) {
+        Pattern pattern = Pattern.compile("[~#@*+%{}<>\\[\\]|\"\\_^öçşiğüÖÇŞİĞÜ]");
+        Matcher matcher = pattern.matcher(toExamine);
+        return matcher.find();
+    }
+    
     public boolean isAlpha(String searchData){
 		return searchData.matches("[a-zA-Z ]+");
     }
+    
+    public String convertTRCharacters(String originalString){
+    	String convertedString = null;
+    	byte[] utf8Bytes = originalString.getBytes(StandardCharsets.UTF_8);
+    	printBytes(utf8Bytes, "viewBytes");        
+    	return originalString;
+    }
+    
+	public static void printBytes(byte[] array, String name) {
+	    for (int k = 0; k < array.length; k++) {
+	        System.out.println(name + "[" + k + "] = " + "0x" +
+	            UnicodeFormatter.byteToHex(array[k]));
+	    }
+	}
+
     
     public void updateView(String result){
         try 
