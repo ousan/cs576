@@ -106,5 +106,22 @@ public class TestCases {
         controller.initialise();
 	}
 	
+		@Test
+	public void testUpdateDB() {
+		view.assignController(controller);
+		controller.updateDB("denizsi", "password");
+        
+	}
+	
+	@Test
+	public void testSetModelParameters() {
+		view.assignController(controller);
+		model.setSearchData(" ");
+	        model.setSearchType("name");
+		controller.setModelParameters();
+
+        
+	}
+	
 	
 }
