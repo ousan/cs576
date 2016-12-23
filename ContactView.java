@@ -2,6 +2,8 @@ package cs576;
 
 import java.awt.Button;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -30,7 +33,8 @@ import javax.swing.text.StyleContext;
 public class ContactView implements  KeyListener{
 
 	private ContactController m_controller;
-    private JFrame mainFrame;
+    
+	private JFrame mainFrame;
     private JPanel textPanel;
     private JLabel headerLabel;    
     private JTextField searchDataTextField;
@@ -44,6 +48,18 @@ public class ContactView implements  KeyListener{
     private StyleContext sc;
     private String searchType = "name";
     private static String searchData = "";
+    
+    private JFrame userManualFrame;
+    private JPanel userManualPanel;
+    private JLabel userManualDescLabel1;
+    private JLabel userManualDescLabel2;
+    private JLabel userManualDescLabel3;
+    
+    private JFrame aboutFrame;
+    private JPanel aboutPanel;
+    private JLabel aboutDescLabel1;
+    private JLabel aboutDescLabel2;
+    private JLabel aboutDescLabel3;
     
     private JFrame updateFrame;
     private JPanel updatePanel;
@@ -76,19 +92,39 @@ public class ContactView implements  KeyListener{
 			}
 		});
         
+        userManualButton.addActionListener(new ActionListener() {
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	userManualFrame.setVisible(true);
+            }
+        });
+        
+        aboutButton.addActionListener(new ActionListener() {
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	aboutFrame.setVisible(true);
+            }
+        });
     }
 
     public void prepareUI(){
+    	GridBagLayout gbl = new GridBagLayout();
     	mainFrame = new JFrame("Fihrist");
-        mainFrame.setSize(500, 400);
+        mainFrame.setSize(500, 480);
         mainFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-        mainFrame.setLayout(new GridLayout(2,1));
+        mainFrame.setLayout(gbl);
         mainFrame.setLocationRelativeTo(null);
-        mainFrame.addWindowListener(new WindowAdapter() {
+        mainFrame.addWindowListener(new WindowAdapter() 
+        
+        {
             public void windowClosing(WindowEvent windowEvent) {
                System.exit(0);
             }        
         });   
+        
+        
         
         headerLabel = new JLabel("Search:");
         searchDataTextField = new JTextField(17);
@@ -118,6 +154,9 @@ public class ContactView implements  KeyListener{
         StyleConstants.setSpaceAbove(style, 1);
         StyleConstants.setSpaceBelow(style, 1);
         
+        makeConstraints(gbl, textPanel,      2, 1, 0, 0, 2.0, 0.5);
+        makeConstraints(gbl, TextAreaScroll, 2, 1, 0, 1, 2.0, 7.0);
+        
         mainFrame.add(textPanel);
         mainFrame.add(TextAreaScroll);
         
@@ -140,6 +179,38 @@ public class ContactView implements  KeyListener{
         updateFrame.setLayout(new GridLayout(1,1));
         updateFrame.setLocationRelativeTo(null);
         updateFrame.add(updatePanel);
+        
+        userManualDescLabel1 = new JLabel("If update warning has recieved, user must log-in.");
+        userManualDescLabel2 = new JLabel("Search operation can be done by name, surname or phone number.");
+        userManualDescLabel3 = new JLabel("To keep list up to date, user can login periodically.");     
+        userManualPanel = new JPanel();
+        userManualPanel.setLayout(new GridLayout(3,1));
+        userManualPanel.add(userManualDescLabel1);
+        userManualPanel.add(userManualDescLabel2);
+        userManualPanel.add(userManualDescLabel3);
+        
+        userManualFrame = new JFrame();
+        userManualFrame = new JFrame("User Manual");
+        userManualFrame.setSize(500, 100);
+        userManualFrame.setLayout(new FlowLayout());
+        userManualFrame.setLocationRelativeTo(null);
+        userManualFrame.add(userManualPanel);
+        
+        aboutDescLabel1 = new JLabel("Oğuzhan İren EROL");
+        aboutDescLabel2 = new JLabel("Deniz Sinanoğlu");
+        aboutDescLabel3 = new JLabel("Çağrı Durak");     
+        aboutPanel = new JPanel();
+        aboutPanel.setLayout(new GridLayout(3,1));
+        aboutPanel.add(aboutDescLabel1);
+        aboutPanel.add(aboutDescLabel2);
+        aboutPanel.add(aboutDescLabel3);
+        
+        aboutFrame = new JFrame();
+        aboutFrame = new JFrame("About");
+        aboutFrame.setSize(500, 100);
+        aboutFrame.setLayout(new FlowLayout());
+        aboutFrame.setLocationRelativeTo(null);
+        aboutFrame.add(aboutPanel);
         
         mainFrame.setVisible(true);
     }
@@ -166,6 +237,19 @@ public class ContactView implements  KeyListener{
     public boolean isAlpha(String searchData){
 		return searchData.matches("[a-zA-Z ]+");
     }
+    
+	public void makeConstraints(GridBagLayout gbl, JComponent comp, int w, int h, int x, int y,
+			double weightx, double weighty) {
+		GridBagConstraints constraints = new GridBagConstraints();
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.gridwidth = w;
+		constraints.gridheight = h;
+		constraints.gridx = x;
+		constraints.gridy = y;
+		constraints.weightx = weightx;
+		constraints.weighty = weighty;
+		gbl.setConstraints(comp, constraints);
+	}  
     
     public String convertTRCharacters(String originalString){
     	String convertedString = null;

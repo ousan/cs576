@@ -3,8 +3,13 @@ package cs576;
 import static org.junit.Assert.*;
 
 import java.awt.Button;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 
 import org.junit.Test;
 
@@ -12,6 +17,13 @@ public class TestCases {
 	ContactModel model = new ContactModel();
 	ContactView view = new ContactView();
 	ContactController controller = new ContactController(model, view);
+	
+	
+	@Test
+	public void testAssignController() {
+		view.assignController(controller);
+		 
+	}
 	
 	@Test
 	public void testNumber() {
@@ -106,7 +118,7 @@ public class TestCases {
         controller.initialise();
 	}
 	
-		@Test
+	@Test
 	public void testUpdateDB() {
 		view.assignController(controller);
 		controller.updateDB("denizsi", "password");
@@ -114,14 +126,50 @@ public class TestCases {
 	}
 	
 	@Test
+	public void testSetUsername() {
+		view.assignController(controller);
+		model.setUsername("denizsi"); 
+	}
+	
+	@Test
+	public void testSetPassword() {
+		view.assignController(controller);
+		model.setPassword("password");
+	}
+	
+	@Test
+	public void testSetInputsForDBupdate() {
+		view.assignController(controller);
+		model.setInputsForDBupdate("denizsi", "password"); 
+	}
+	
+	@Test
+	public void testSetSearchData() {
+		view.assignController(controller);
+		model.setSearchData("deniz"); 
+	}
+	@Test
+	public void testSetSearchType() {
+		view.assignController(controller);
+		model.setSearchType("name"); 
+	}
+	@Test
+	public void testSetWarningMsg() {
+		view.assignController(controller);
+		model.setWarningMsg("Database couldn't be found please update database by clicking"); 
+	}
+	
+	
+	
+	/*	@Test
 	public void testSetModelParameters() {
 		view.assignController(controller);
 		model.setSearchData(" ");
-	        model.setSearchType("name");
+	    model.setSearchType("name");
 		controller.setModelParameters();
+	}*/
 
-        
-	}
+	
 	
 	
 }
